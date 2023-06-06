@@ -1,0 +1,8 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Seikyo Integration OIC/ODA",
+    "description": "--",
+    "version": "1.0.0"
+  }
+}
