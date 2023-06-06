@@ -1,8 +1,217 @@
 {
-  "openapi": "3.0.1",
+  "swagger": "2.0",
   "info": {
-    "title": "Seikyo Integration OIC/ODA",
-    "description": "--",
-    "version": "1.0.0"
-  }
+    "version": "1.0.0",
+    "title": "Shopping Cart API"
+  },
+  "host": "localhost:5000",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "paths": {
+    "/cart/product": {
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "cartId": {
+                "type": ["string", "null"]
+              },
+              "product": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "idPeriod": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "idProduct": {
+                      "type": "integer"
+                    },
+                    "idPrice": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": ["idPeriod", "name", "idProduct", "idPrice"]
+                }
+              }
+            },
+            "required": ["product"]
+          }
+        }
+      ],
+      "post": {
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cartId": {
+                    "type": "string || null"
+                  },
+                  "product": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "idPrice": {
+                          "type": "integer"
+                        },
+                        "idProduct": {
+                          "type": "integer"
+                        },
+                        "idPeriod": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "404": {
+            "description": "Malformated properties or user already exist"
+          }
+        }
+      }
+    },
+
+    "/cart/product/{productId}": {
+      "delete": {
+        "summary": "Remove product from shopping cart",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to be removed from the cart"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Product removed from shopping cart",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Product removed from shopping cart successfully"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Cart"]
+      }
+    },
+    "/cart/{cartId}": {
+      "get": {
+        "summary": "Get shopping cart by ID",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the cart"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Shopping cart retrieved successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "cart": {
+                  "type": "object",
+                  "properties": {
+                    "totalPrice": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "cart": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "product": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "idPrice": {
+                                "type": "integer"
+                              },
+                              "idProduct": {
+                                "type": "integer"
+                              },
+                              "idPeriod": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "cartId": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "idPrice",
+                              "idProduct",
+                              "idPeriod",
+                              "name",
+                              "cartId"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Cart"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Cart"
+    }
+  ]
 }

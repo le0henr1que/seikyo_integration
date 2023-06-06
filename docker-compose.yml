@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/app
+      - .:/src
     ports:
       - "${PORT}:${PORT}"
     environment:

@@ -1,6 +1,6 @@
 export interface Cart {
   id?: string;
-  product?: Product[];
+  product?: Product[] | null;
 }
 
 export interface Product {

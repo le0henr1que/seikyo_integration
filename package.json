@@ -13,6 +13,9 @@
     "build": "tsc --project tsconfig.json",
     "lint:fix": "lint --fix"
   },
+  "prisma": {
+    "schema": "./src/database/prisma/schema.prisma"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -25,6 +28,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.15.0",
+    "axios": "^1.4.0",
     "colorette": "^2.0.20",
     "cors": "^2.8.5",
     "eslint": "^8.42.0",

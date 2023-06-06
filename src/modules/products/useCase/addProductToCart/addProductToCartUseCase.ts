@@ -2,13 +2,10 @@ import { CreateShoppingCart } from "types/common/global";
 import { IAddProductToCart } from "../../repositories/addProductToCart/IAddProductToCart";
 import { Product } from "types/products";
 import logger from "../../../../config/winston";
+import { HttpError } from "../../../../shared/error";
 
 export class AddProductToCartUseCase {
-  products: Product[] | undefined;
-
-  constructor(private addProductToCart: IAddProductToCart) {
-    this.products = [];
-  }
+  constructor(private addProductToCart: IAddProductToCart) {}
 
   private async processProducts(
     products: Product[],
@@ -24,7 +21,6 @@ export class AddProductToCartUseCase {
         name,
       };
 
-      this.products?.push(productCreated);
       await this.addProductToCart.createProduct(productCreated, cartId);
     }
   }
@@ -32,8 +28,9 @@ export class AddProductToCartUseCase {
   async execute(shoppingCart: CreateShoppingCart): Promise<CreateShoppingCart> {
     const { cartId, product } = shoppingCart;
 
-    // eslint-disable-next-line prefer-const
-    let arrayProducts = this.products;
+    if (product?.length === 0) {
+      throw new HttpError("Add a product before registering.", 404);
+    }
 
     if (!cartId) {
       const cartIdCreated = await this.addProductToCart.createCart();
@@ -41,12 +38,13 @@ export class AddProductToCartUseCase {
       if (Array.isArray(product)) {
         await this.processProducts(product, cartIdCreated);
       }
+      const arrayProductsCart = await this.addProductToCart.getProductCart(
+        cartIdCreated
+      );
 
       const dataShoppingCartCreated: CreateShoppingCart = {
         cartId: cartIdCreated,
-        product: {
-          arrayProducts,
-        },
+        product: arrayProductsCart,
       };
       logger.info(dataShoppingCartCreated);
       return dataShoppingCartCreated;
@@ -55,8 +53,10 @@ export class AddProductToCartUseCase {
     const shoppingCartIdExist = await this.addProductToCart.verifyId(cartId);
 
     if (shoppingCartIdExist.length == 0) {
-      logger.error(
-        "Carrinho não existe, verifique o id do carrinho e tente novamente."
+      logger.error("Cart does not exist, check the cart id and try again.");
+      throw new HttpError(
+        "Shopping Cart does not exist, check the shopping cart id and try again.",
+        404
       );
     }
 
@@ -68,14 +68,14 @@ export class AddProductToCartUseCase {
       }
     }
 
+    const arrayProductsCart = await this.addProductToCart.getProductCart(
+      cartId
+    );
     const dataShoppingCartCreated: CreateShoppingCart = {
       cartId: shoppingCartIdExist[0].id,
-      product: {
-        arrayProducts,
-      },
+      product: arrayProductsCart,
     };
-    logger.info(dataShoppingCartCreated);
-
+    logger.info(JSON.stringify(dataShoppingCartCreated));
     return dataShoppingCartCreated;
   }
 }

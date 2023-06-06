@@ -3,7 +3,7 @@ import { IRemoveProductToCart } from "../../repositories/removeProductToCart/IRe
 export class RemoveProductToCartUseCase {
   constructor(private removeProductToCart: IRemoveProductToCart) {}
 
-  async execute() {
-    // await this.removeProductToCart.execute();
+  async execute(idProduct: string) {
+    await this.removeProductToCart.removeProduct(idProduct);
   }
 }

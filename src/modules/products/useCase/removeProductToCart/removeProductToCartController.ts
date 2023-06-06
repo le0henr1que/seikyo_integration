@@ -5,9 +5,14 @@ export class RemoveProductToCartController {
   constructor(private removeProductUseCase: RemoveProductToCartUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    await this.removeProductUseCase.execute();
+    const { id } = request.params;
+
+    await this.removeProductUseCase.execute(id);
     return response
       .status(201)
-      .json({ error: false, message: "Produto adicionado ao carrinho" });
+      .json({
+        error: false,
+        message: "Product removed from shopping cart successfully",
+      });
   }
 }

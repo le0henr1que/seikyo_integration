@@ -1,3 +1,4 @@
 export interface ISearchCart {
-  execute(): Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  searchCart(idCart: string): Promise<any>;
 }

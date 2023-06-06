@@ -1,3 +1,3 @@
 export interface IRemoveProductToCart {
-  removeProduct(): Promise<void>;
+  removeProduct(idProduct: string): Promise<void>;
 }

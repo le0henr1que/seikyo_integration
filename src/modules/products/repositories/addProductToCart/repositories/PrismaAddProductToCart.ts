@@ -38,4 +38,14 @@ export class PrismaAddProductToCart implements IAddProductToCart {
 
     return shoppingCart;
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getProductCart(cartId: string): Promise<any> {
+    const prisma = new PrismaClient();
+
+    return prisma.product.findMany({
+      where: {
+        cartId: cartId,
+      },
+    });
+  }
 }
