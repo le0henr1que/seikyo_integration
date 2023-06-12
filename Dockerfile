@@ -2,14 +2,20 @@ FROM node:latest
 
 WORKDIR /src
 
-COPY package*.json ./
-
-RUN npm i
+RUN npm install prisma -g
 
 COPY . .
 
+RUN npm install
+
 RUN npm run build
 
-EXPOSE 3000
+run 
 
 CMD ["npm", "start"]
+
+# Adicione um script de inicialização personalizado
+COPY wait-for-db.sh /src/wait-for-db.sh
+RUN chmod +x /src/wait-for-db.sh
+
+CMD ["/bin/bash", "-c", "/src/wait-for-db.sh && npm start"]

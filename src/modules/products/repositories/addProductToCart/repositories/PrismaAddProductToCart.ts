@@ -10,13 +10,13 @@ export class PrismaAddProductToCart implements IAddProductToCart {
     });
     return shoppingCart.id;
   }
-
-  async createProduct(product: Product, cartId: string): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async createProduct(product: Product, cartId: string): Promise<any> {
     const prisma = new PrismaClient();
 
     const { idPrice, idProduct, idPeriod, name } = product;
 
-    await prisma.product.create({
+    const productCreated = await prisma.product.create({
       data: {
         idPrice,
         idProduct,
@@ -25,6 +25,7 @@ export class PrismaAddProductToCart implements IAddProductToCart {
         cartId,
       },
     });
+    return productCreated.id;
   }
 
   async verifyId(id: string): Promise<Cart[]> {
@@ -42,9 +43,9 @@ export class PrismaAddProductToCart implements IAddProductToCart {
   async getProductCart(cartId: string): Promise<any> {
     const prisma = new PrismaClient();
 
-    return prisma.product.findMany({
+    return prisma.product.findFirst({
       where: {
-        cartId: cartId,
+        id: cartId,
       },
     });
   }

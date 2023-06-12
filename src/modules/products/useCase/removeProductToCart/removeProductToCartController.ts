@@ -8,11 +8,9 @@ export class RemoveProductToCartController {
     const { id } = request.params;
 
     await this.removeProductUseCase.execute(id);
-    return response
-      .status(201)
-      .json({
-        error: false,
-        message: "Product removed from shopping cart successfully",
-      });
+    return response.status(201).json({
+      error: false,
+      message: "Product removed from shopping cart successfully",
+    });
   }
 }

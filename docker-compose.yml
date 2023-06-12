@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   app:
     build:
@@ -6,12 +6,11 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - '5000:5000'
+      - "5000:5000"
     environment:
       - DATABASE_URL=postgres://postgres:mysecretpassword@db:5432/mydb
     depends_on:
       - db
-    # command: sh -c 'yes | npx prisma db push ; yes | npx prisma migrate dev'
 
   db:
     image: postgres:13

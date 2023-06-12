@@ -6,11 +6,11 @@ import { HttpError } from "../../../../shared/error";
 
 export class AddProductToCartUseCase {
   constructor(private addProductToCart: IAddProductToCart) {}
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async processProducts(
     products: Product[],
     cartId: string
-  ): Promise<void> {
+  ): Promise<any> {
     for (const element of products) {
       const { idPeriod, idProduct, idPrice, name } = element;
 
@@ -21,7 +21,7 @@ export class AddProductToCartUseCase {
         name,
       };
 
-      await this.addProductToCart.createProduct(productCreated, cartId);
+      return await this.addProductToCart.createProduct(productCreated, cartId);
     }
   }
 
@@ -35,11 +35,15 @@ export class AddProductToCartUseCase {
     if (!cartId) {
       const cartIdCreated = await this.addProductToCart.createCart();
 
-      if (Array.isArray(product)) {
-        await this.processProducts(product, cartIdCreated);
-      }
-      const arrayProductsCart = await this.addProductToCart.getProductCart(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const idProductCreaated = await this.processProducts(
+        product,
         cartIdCreated
+      );
+
+      const arrayProductsCart = await this.addProductToCart.getProductCart(
+        idProductCreaated
       );
 
       const dataShoppingCartCreated: CreateShoppingCart = {
@@ -63,13 +67,14 @@ export class AddProductToCartUseCase {
     if (shoppingCartIdExist.length !== 0) {
       const cartIdForCreate: string | undefined = shoppingCartIdExist[0].id;
 
-      if (Array.isArray(product) && typeof cartIdForCreate === "string") {
-        await this.processProducts(product, cartIdForCreate);
-      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      // eslint-disable-next-line no-var
+      var productCreated = await this.processProducts(product, cartIdForCreate);
     }
 
     const arrayProductsCart = await this.addProductToCart.getProductCart(
-      cartId
+      productCreated
     );
     const dataShoppingCartCreated: CreateShoppingCart = {
       cartId: shoppingCartIdExist[0].id,
